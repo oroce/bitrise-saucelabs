@@ -1,0 +1,42 @@
+---
+format_version: '3'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: other
+trigger_map:
+- push_branch: "*"
+  workflow: primary
+- pull_request_source_branch: "*"
+  workflow: primary
+workflows:
+  primary:
+    steps:
+    - activate-ssh-key@3.1.1:
+        run_if: '{{getenv "SSH_RSA_PRIVATE_KEY" | ne ""}}'
+    - git-clone@3.4.3: {}
+    - npm@0.9.0:
+        inputs:
+        - command: install
+    - npm@0.9.0:
+        inputs:
+        - command: test
+    - script@1.1.4:
+        deps:
+          apt_get:
+          - name: python-pip
+          - name: python-dev
+          - name: build-essential
+        inputs:
+        - content: |-
+            #!/bin/bash
+            # fail if any commands fails
+            set -e
+            # debug log
+            set -x
+            wget https://saucelabs.com/downloads/sc-latest-linux.tar.gz
+            tar -xzf sc-latest-linux.tar.gz
+            cd sc-*-linux && ./bin/sc --user $SAUCE_USERNAME --api-key $SAUCE_ACCESS_KEY --readyfile ~/sauce_is_ready &
+            while [ ! -e ~/sauce_is_ready ]; do sleep 1; done
+            npm start &
+            wget --retry-connrefused --no-check-certificate -T 30 http://localhost:8080
+            npm run test-e2e
+            killall --wait sc

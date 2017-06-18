@@ -1,0 +1,21 @@
+<html>
+<head>
+  <title>test page</title>
+</head>
+<body>
+  <button id="btn-incr">click me</button>
+  <button id="btn-clear">clear</button>
+  <div class="content">0</div>
+  <script type="text/javascript">
+    var btnIncr = document.querySelector('#btn-incr');
+    var btnClear = document.querySelector('#btn-clear');
+    var content = document.querySelector('.content');
+    btnIncr.addEventListener('click', function() {
+      content.innerText = +content.innerText + 1;
+    }, false);
+    btnClear.addEventListener('click', function() {
+      content.innerText = 0;
+    }, false);
+  </script>
+</body>
+</html>
