@@ -9,7 +9,7 @@ module.exports = function(config) {
       platform: 'Windows 7',
       version: '55'
     },
-    /*sl_firefox: {
+    sl_firefox: {
       base: 'SauceLabs',
       browserName: 'firefox',
       version: '30'
@@ -25,7 +25,7 @@ module.exports = function(config) {
       browserName: 'internet explorer',
       platform: 'Windows 8.1',
       version: '11'
-    }*/
+    }
   }
 
   config.set({
@@ -43,8 +43,6 @@ module.exports = function(config) {
         startConnect: false,
         port: 4445
     },
-    //port: 4445,
-    //runnerPort: 4445,
     proxies: {
       '/test-page': 'http://localhost:8080/index.html'
     },
